@@ -68,3 +68,23 @@ Hello world!
   </section>
 <?php $this->end_block('content'); ?>
 ```
+
+Final output
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello world!</title>
+  </head>
+  <body>
+    <section class="section">
+    <div class="container">
+      <h1 class="title">Hello An!</h1>
+      <p class="subtitle">My first website!</p>
+    </div>
+  </section>
+  </body>
+</html>
+```
