@@ -27,7 +27,7 @@ use MinPlate\Template;
 
 $template = new Template('../templates');
 $template->assign('name', 'An');
-return $template->render('page.tpl');
+echo $template->render('page.tpl');
 ```
 
 layout.tpl
