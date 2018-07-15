@@ -4,16 +4,20 @@ namespace MinPlate;
 class Template {
     protected $data = [];
     protected $blocks = [];
-    protected $path = '';
     protected $outputs = [];
     protected $blocks_context = [];
     protected $block_names = [];
+    protected $template_dirs = [];
 
     public function __construct($template_path = './'){
+        $this->add_path($template_path);
+    }
+
+    public function add_path($template_path){
         if( !is_dir($template_path) ){
             throw new \Exception("{$template_path} is not a directory", 1);
         }
-        $this->path = realpath($template_path);
+        array_unshift($this->template_dirs, realpath($template_path));
     }
 
     public function assign(string $variable_name, $value){
@@ -21,10 +25,7 @@ class Template {
     }
 
     public function include(string $template_name){
-        $template_file = $this->path.DIRECTORY_SEPARATOR.$template_name;
-        if( !is_file( $template_file ) ) {
-            throw new \Exception("Could not include template file: {$template_file}", 2);
-        }
+        $template_file = $this->get_template_file($template_name);
         $this->__parse($template_file);
     }
 
@@ -76,16 +77,24 @@ class Template {
 
     public function render(string $template_name, array $data = []){
         $this->data = array_merge($this->data, $data);
-        $template_file = $this->path.DIRECTORY_SEPARATOR.$template_name;
-        if(!is_file($template_file)){
-            throw new \Exception("Could not render template file: {$template_file}", 4);
-        }
+        $template_file = $this->get_template_file($template_name);
         $this->__parse($template_file);
         if($this->blocks_context){
             $names = implode(', ', $this->blocks_context);
             throw new \Exception("Block(s) {$names} do not have ending code", 5);
         }
         return $this->__generate_content($this->outputs);
+    }
+
+    protected function get_template_file($template_name){
+        foreach($this->template_dirs as $path){
+            $template_file = $path.DIRECTORY_SEPARATOR.$template_name;
+            if(is_file($template_file)){
+                return $template_file;
+            }
+        }
+
+        throw new \Exception("Could not find template: {$template_name}", 4);
     }
 
     private function __parse($template_file){

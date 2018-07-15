@@ -2,16 +2,18 @@
 A mini template engine for PHP
 
 ### Introduction
-minplate is a mini template engine for PHP which has a very simple API and easy to learn. mintemplate use pure PHP so it's super fast and you don't have to learn new syntax. minplate support the below feature:
+minplate is a mini template engine for PHP which has a very simple API and easy to learn. minplate use pure PHP so it's super fast and you don't have to learn new syntax. minplate support the below features:
 - assign variables for the template.
 - creating block in the layout which can be override.
 - include/inherite other template file.
+- allow override the template directory with add_path function. The latest inserted path will be used first.
 
 That's all!
 
 ### API
 ```php
 function __construct($template_path = './');
+function add_path($template_path);
 function assign(string $variable_name, $value);
 function include(string $template_name);
 function block(string $block_name);
