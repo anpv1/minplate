@@ -26,6 +26,15 @@ class Template {
 
     public function include(string $template_name){
         $template_file = $this->get_template_file($template_name);
+        $output = ob_get_clean();
+        if($output){
+            $block = current($this->blocks_context);
+            if($block){
+                $this->blocks[$block][] = ['type' => 'raw', 'data' => $output];
+            } else {
+                $this->outputs[] = ['type' => 'raw', 'data' => $output];
+            }
+        }
         $this->__parse($template_file);
     }
 
@@ -103,8 +112,14 @@ class Template {
         require_once($template_file);
         $output = ob_get_clean();
         if($output){
-            $this->outputs[] = ['type' => 'raw', 'data' => $output];
+            $block = current($this->blocks_context);
+            if($block){
+                $this->blocks[$block][] = ['type' => 'raw', 'data' => $output];
+            } else {
+                $this->outputs[] = ['type' => 'raw', 'data' => $output];
+            }
         }
+        ob_start();
     }
 
     private function __generate_content($outputs){
