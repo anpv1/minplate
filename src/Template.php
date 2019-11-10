@@ -109,7 +109,7 @@ class Template {
     private function __parse($template_file){
         extract($this->data);
         ob_start();
-        require_once($template_file);
+        include($template_file);
         $output = ob_get_clean();
         if($output){
             $block = current($this->blocks_context);
